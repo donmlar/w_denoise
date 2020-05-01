@@ -15,8 +15,8 @@ def get_camera_wb(file_name):
 
     raw_pattern = file.raw_pattern
 
-    print(wb)
-    print(black)
+    # print(wb)
+    # print(black)
 
     # 映射到3x3对角矩阵
     nz3 = np.zeros((3,3) ,dtype=np.float32)

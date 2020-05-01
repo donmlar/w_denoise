@@ -49,7 +49,7 @@ def reduce(input_full):
     output[:,:,2]= pool2d(input_full[:,:,2], kernel_size=2, stride=2, padding=0, pool_mode='avg')
     output[:,:,3]= pool2d(input_full[:,:,3], kernel_size=2, stride=2, padding=0, pool_mode='avg')
 
-    while output.shape[0]>120:
+    while output.shape[0]>300:
         output = reduce(output)
     return output
 
@@ -79,14 +79,12 @@ class ViewThread(Thread):
             out_image = sess.graph.get_tensor_by_name('output:0')
 
             name = self.raw_file.split('/')[-1].split('.')[0]
-
+            print('开始计算浏览图：' + name + "")
             # 计算放大
             # 按照10分 放大比例
             before_amp = 2** (self.light*(5-self.rate)/10)
             after_amp = 2** (self.light*(5+self.rate)/10)
 
-            print('before_amp:'+str(before_amp))
-            print('after_amp:'+str(after_amp))
 
             tick1 = time.time()
             raw = rawpy.imread(self.raw_file)
@@ -117,15 +115,17 @@ class ViewThread(Thread):
             im = Image.fromarray(output, 'RGB')
 
 
-            im.save('./output/' + name + "_v.png")
+            im.save('./tmp/' + name + "_v.png")
 
 
 
 
             self.viewImg = output
             tick2 = time.time()
-            print(tick2 - tick1)
-            print('完成：'+name + " view")
+            print('用时：'+str(round(tick2 - tick1,2))+'秒')
+            print('完成：'+name + " 浏览")
+
+            print('浏览图仅用于参考曝光，不代表最终输出效果。')
 
     def getViewImg(self):
         return self.viewImg

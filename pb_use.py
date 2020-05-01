@@ -137,13 +137,12 @@ def restore_mode_pb_single(pb_file_path ,raw_file ,output_path ,light,rate,gamma
 
         name = raw_file.split('/')[-1].split('.')[0]
 
+
+        print('开始降噪：' + name + "")
         # 计算放大
         # 按照10分 放大比例
         before_amp = 2** (light*(5-rate)/10)
         after_amp = 2** (light*(5+rate)/10)
-
-        print('before_amp:'+str(before_amp))
-        print('after_amp:'+str(after_amp))
 
         tick1 = time.time()
         raw = rawpy.imread(raw_file)
@@ -180,7 +179,7 @@ def restore_mode_pb_single(pb_file_path ,raw_file ,output_path ,light,rate,gamma
 
         tick2 = time.time()
 
-        print(tick2 - tick1)
+        print('用时：' + str(round(tick2 - tick1, 2)) + '秒')
         print('完成：'+name + "_denoise.png")
 
 

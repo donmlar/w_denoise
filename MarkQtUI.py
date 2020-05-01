@@ -21,23 +21,23 @@ from PyQt5.QtGui import QTextCursor
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1329, 654)
+        MainWindow.resize(1400, 800)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.start_denoise = QtWidgets.QPushButton(self.centralwidget)
-        self.start_denoise.setGeometry(QtCore.QRect(460, 330, 80, 20))
+        self.start_denoise.setGeometry(QtCore.QRect(470, 320, 80, 20))
         self.start_denoise.setObjectName("start_denoise")
         self.get_input_dng = QtWidgets.QPushButton(self.centralwidget)
-        self.get_input_dng.setGeometry(QtCore.QRect(40, 40, 80, 20))
+        self.get_input_dng.setGeometry(QtCore.QRect(40, 40, 91, 31))
         self.get_input_dng.setObjectName("get_input_dng")
         self.set_output_path = QtWidgets.QPushButton(self.centralwidget)
-        self.set_output_path.setGeometry(QtCore.QRect(40, 110, 80, 20))
+        self.set_output_path.setGeometry(QtCore.QRect(40, 110, 91, 31))
         self.set_output_path.setObjectName("set_output_path")
         self.output_path_viewer = QtWidgets.QTextBrowser(self.centralwidget)
-        self.output_path_viewer.setGeometry(QtCore.QRect(140, 110, 421, 31))
+        self.output_path_viewer.setGeometry(QtCore.QRect(140, 110, 421, 41))
         self.output_path_viewer.setObjectName("output_path_viewer")
         self.input_path_viewer = QtWidgets.QTextBrowser(self.centralwidget)
-        self.input_path_viewer.setGeometry(QtCore.QRect(140, 40, 421, 31))
+        self.input_path_viewer.setGeometry(QtCore.QRect(140, 40, 421, 41))
         self.input_path_viewer.setObjectName("input_path_viewer")
         self.light_slider = QtWidgets.QSlider(self.centralwidget)
         self.light_slider.setGeometry(QtCore.QRect(150, 180, 181, 16))
@@ -50,8 +50,8 @@ class Ui_MainWindow(object):
         self.label.setObjectName("label")
         self.rate_slider = QtWidgets.QSlider(self.centralwidget)
         self.rate_slider.setGeometry(QtCore.QRect(150, 230, 181, 16))
-        self.rate_slider.setMinimum(-5)
-        self.rate_slider.setMaximum(5)
+        self.rate_slider.setMinimum(-10)
+        self.rate_slider.setMaximum(10)
         self.rate_slider.setProperty("value", 0)
         self.rate_slider.setOrientation(QtCore.Qt.Horizontal)
         self.rate_slider.setObjectName("rate_slider")
@@ -74,6 +74,12 @@ class Ui_MainWindow(object):
         self.rate_lable = QtWidgets.QLabel(self.centralwidget)
         self.rate_lable.setGeometry(QtCore.QRect(350, 230, 54, 12))
         self.rate_lable.setObjectName("rate_lable")
+        self.image_lable = QtWidgets.QLabel(self.centralwidget)
+        self.image_lable.setGeometry(QtCore.QRect(610, 40, 621, 571))
+        self.image_lable.setObjectName("label_4")
+        self.get_view = QtWidgets.QPushButton(self.centralwidget)
+        self.get_view.setGeometry(QtCore.QRect(360, 320, 80, 20))
+        self.get_view.setObjectName("get_view")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1329, 21))
@@ -82,13 +88,6 @@ class Ui_MainWindow(object):
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
-        self.image_lable = QtWidgets.QLabel(self.centralwidget)
-        self.image_lable.setGeometry(QtCore.QRect(633, 41, 651, 571))
-        self.image_lable.setText("")
-        self.image_lable.setObjectName("image_lable")
-        self.get_view = QtWidgets.QPushButton(self.centralwidget)
-        self.get_view.setGeometry(QtCore.QRect(340, 330, 80, 20))
-        self.get_view.setObjectName("get_view")
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -98,7 +97,7 @@ class Ui_MainWindow(object):
         self.start_denoise.setText(_translate("MainWindow", "开始处理"))
         self.get_input_dng.setText(_translate("MainWindow", "选择图像文件"))
         self.set_output_path.setText(_translate("MainWindow", "设置输出目录"))
-        self.get_view.setText(_translate("MainWindow", "亮度浏览（x"))
+        self.get_view.setText(_translate("MainWindow", "亮度浏览"))
         self.label.setText(_translate("MainWindow", "亮度"))
         self.label_2.setText(_translate("MainWindow", "比例控制"))
         self.label_3.setText(_translate("MainWindow", "暗部优化"))
@@ -137,9 +136,8 @@ class Ui_MainWindow(object):
 
 
     def getDngFile(self):
-        fileName, fileType = QtWidgets.QFileDialog.getOpenFileName(None, "打开raw文件", '.', "(*.*)")
+        fileName, fileType = QtWidgets.QFileDialog.getOpenFileName(None, "打开raw文件", '.', "RAW文件(*.dng *.nef *.rw2 *.cr2 *.arw)")
         print(fileName)
-        print(fileType)
         # print('输入文件：'+dir)
 
         self.input_path_viewer.setText(fileName)
@@ -173,7 +171,7 @@ class Ui_MainWindow(object):
         #
         self.start_denoise.setText("处理中")
         self.start_denoise.setEnabled(False)
-
+        self.get_view.setEnabled(False)
 
         self.thread = ProcessImg(pb_path,fileName ,output_path,light,rate,gamma)
         self.thread.signal.connect(self.processFinish)
@@ -184,6 +182,8 @@ class Ui_MainWindow(object):
 
         self.start_denoise.setText("开始处理")
         self.start_denoise.setEnabled(True)
+        self.get_view.setEnabled(True)
+
 
 
 
@@ -200,15 +200,29 @@ class Ui_MainWindow(object):
         self.thread.signal2.connect(self.viewFinish)
         self.thread.start()
 
-    def viewFinish(self,img):
-        # pix = QPixmap.fromImage(img)
-        # item = QGraphicsPixmapItem(pix)
+        self.start_denoise.setEnabled(False)
+        self.get_view.setEnabled(False)
 
-        self.image_lable.setPixmap(QPixmap.fromImage(img))
+    def viewFinish(self,img):
+        # self.image_lable.setPixmap(QPixmap.fromImage(img))
+
+        fileName = self.input_path_viewer.toPlainText()
+
+        name = fileName.split('/')[-1].split('.')[0]
+
+        pixmap = QPixmap("./tmp/"+name+"_v.png")
+
+        self.image_lable.setPixmap(pixmap)
         # self.resize(self.image.width(), self.image.height())
 
         self.image_lable.repaint()
         self.image_lable.setScaledContents(True)
+
+
+        self.start_denoise.setEnabled(True)
+        self.get_view.setEnabled(True)
+
+
 
     # 更新控制台
 class Stream(QObject):
